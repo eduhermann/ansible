@@ -1,0 +1,76 @@
+---
+### Tasks to Any Operations Systems
+
+- name: Project 03 - Initial Configs | Change /etc/profile
+  lineinfile:
+    dest: /etc/profile
+    line: "{{ item }}"
+  with_items:
+    - '#--- Default export & Alias ---#'
+    - 'export HISTTIMEFORMAT="%d/%m/%Y - %H:%M:%S - "'
+    - 'export HISTSIZE="5000"'
+    - 'export HISTFILESIZE="5000"'
+    - 'alias ls="ls -lh --color"'
+    - 'alias grep="grep --color"'
+    - 'alias vi="vim"'
+    - 'alias rm="rm -i"'
+
+- name: Project 03 - Initial Configs | Configuring timezone
+  file:
+    src: "/usr/share/zoneinfo/{{ timezone }}"
+    dest: "/etc/localtime"
+    state: link
+    force: yes
+
+- name: Project 03 - Initial Configs | Add SSH Banner
+  copy:
+    src: banner_ssh
+    dest: /etc/ssh/banner_ssh
+
+- name: Project 03 - Initial Configs | Setting basic SSH options
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    state: present
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+    backrefs: yes
+  with_items:
+    - { regexp: '#Banner none', line: 'Banner /etc/ssh/banner_ssh' }
+  notify:
+    - "Project 03 - Initial Configs | Restart SSH Service | Debian/Ubuntu"
+    - "Project 03 - Initial Configs | Restart SSH Service | CentOS/RedHat"
+
+### Tasks to RedHat or CentOS
+
+- name: Project 03 - Initial Configs | Remove Firewalld and Postfix
+  yum:
+    name: ['firewalld', 'postfix']
+    state: absent
+  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+
+- name: Project 03 - Initial Configs | Disable SELINUX
+  selinux:
+    state: disabled
+  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+
+- name: Project 03 - Initial Configs | Disable SELINUX (Permanent)
+  replace:
+      dest: "/etc/selinux/config"
+      regexp: "SELINUX=enforcing"
+      replace: "SELINUX=disabled"
+  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+
+- name: Project 03 - Initial Configs | Install basic packages
+  yum: 
+    name: "{{ common_packages_redhat }}"
+    state: latest
+  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+
+#### Tasks to Debian or Ubuntu
+
+- name: Project 03 - Initial Configs | Install basic packages
+  apt:
+    name: "{{ common_packages_debian }}"
+    state: latest
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+...

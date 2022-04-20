@@ -1,0 +1,9 @@
+---
+- name: Project 03 - Initial Configs
+  hosts: container-hosts
+  vars:
+    ansible_ssh_user: root
+  any_errors_fatal: false
+  roles:
+    - ../../roles/
+...

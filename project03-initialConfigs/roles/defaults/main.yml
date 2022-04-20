@@ -1,0 +1,55 @@
+---
+timezone: America/Sao_Paulo
+
+common_packages_redhat:
+  - net-tools
+  - bind-utils
+  - vim
+  - wget
+  - curl
+  - tcpdump
+  - telnet
+  - lsof
+  - htop
+  - iperf3
+  - iptraf
+  - lynx
+  - mtr
+  - nmap
+  - unzip
+  - screen
+  - tree
+  - redhat-lsb-core
+  - bash-completion
+  - nmon
+  - ncdu
+  - slurm
+  - dstat
+  - ccze
+
+common_packages_debian:
+  - net-tools
+  - dnsutils
+  - vim
+  - wget
+  - curl
+  - tcpdump
+  - telnet
+  - lsof
+  - htop
+  - iperf3
+  - iptraf
+  - lynx
+  - mtr
+  - nmap
+  - unzip
+  - screen
+  - tree
+  - bash-completion
+  - nmon
+  - ncdu
+  - slurm
+  - dstat
+  - ccze
+  - tshark
+...
