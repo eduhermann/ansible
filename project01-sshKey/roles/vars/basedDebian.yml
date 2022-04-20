@@ -1,0 +1,5 @@
+### Based Debian allow sudo with sysadmin user.
+ansible_become: yes
+ansible_become_method: sudo
+ansible_become_user: root
+ansible_become_password: sysadmin # I recommend that you use strong password in your servers.

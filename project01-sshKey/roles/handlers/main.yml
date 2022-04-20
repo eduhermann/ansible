@@ -1,0 +1,19 @@
+---
+
+- name: Project 01 - Import SSH Key | Restart SSH Service | Debian/Ubuntu
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name: ssh
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+
+- name: Project 01 - Import SSH Key | Restart SSH Service | CentOS/RedHat
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name: sshd
+  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+
+...

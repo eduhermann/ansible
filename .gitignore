@@ -1,0 +1,4 @@
+ansible-deploy
+ansible-deploy.pub
+*.log
+*.db

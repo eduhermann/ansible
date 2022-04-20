@@ -1,0 +1,10 @@
+---
+- name: Project 01 - Import SSH Key 
+  vars:
+    ansible_ssh_user: sysadmin # You need to change to your Linux username
+    ansible_ssh_pass: sysadmin # You need to change to your Linux password
+  hosts: container-hosts
+  any_errors_fatal: false
+  roles:
+    - ../../roles/
+...

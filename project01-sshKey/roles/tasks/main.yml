@@ -1,0 +1,53 @@
+---
+
+- name: Project 01 - Import SSH Key | Import Vars Debian/Ubuntu
+  include_vars: "{{ item }}"
+  with_items:
+    - "basedDebian.yml"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+
+- name: Project 01 - Import SSH Key | Import Vars RedHat/CentOS
+  include_vars: "{{ item }}"
+  with_items:
+    - "basedRedHat.yml"
+  when: ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
+
+- name: Project 01 - Import SSH Key | Create directory
+  file:
+    path: /root/.ssh/
+    state: directory
+
+- name: Project 01 - Import SSH Key | Copy key
+  copy:
+    src: "ansible-deploy.pub"
+    dest: "/root/.ssh/authorized_keys"
+
+- name: Project 01 - Import SSH Key | Change Permit Root Login
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    state: present
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+    backrefs: yes
+  with_items:
+    - { regexp: '#PermitRootLogin no', line: 'PermitRootLogin yes' }
+    - { regexp: 'PermitRootLogin no', line: 'PermitRootLogin yes' }
+    - { regexp: '#PermitRootLogin prohibit-password', line: 'PermitRootLogin yes' }    
+    - { regexp: 'PermitRootLogin prohibit-password', line: 'PermitRootLogin yes' }
+    - { regexp: '#PermitRootLogin yes', line: 'PermitRootLogin yes' }
+    - { regexp: '#StrictModes yes', line: 'StrictModes yes' }
+    - { regexp: 'X11Forwarding yes', line: 'X11Forwarding no' }
+  notify: 
+    - "Project 01 - Import SSH Key | Restart SSH Service | Debian/Ubuntu"
+    - "Project 01 - Import SSH Key | Restart SSH Service | CentOS/RedHat"
+
+- name: Project 01 - Import SSH Key | Add auth only RSA
+  lineinfile: dest=/etc/ssh/sshd_config line={{ item }}
+  with_items:
+    - 'Match User root'
+    - 'PasswordAuthentication no'
+  notify: 
+    - "Project 01 - Import SSH Key | Restart SSH Service | Debian/Ubuntu"
+    - "Project 01 - Import SSH Key | Restart SSH Service | CentOS/RedHat"
+
+...

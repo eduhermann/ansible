@@ -1,0 +1,3 @@
+### Based RedHat allow root directly.
+ansible_ssh_user: root
+ansible_ssh_pass: sysadmin # I recommend that you use strong password in your servers.
