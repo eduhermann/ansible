@@ -1,0 +1,10 @@
+---
+- name: Project 02 - Update Operational System
+  hosts: container-hosts
+  vars:
+    ansible_ssh_user: root
+  any_errors_fatal: true
+  serial: 1
+  roles:
+    - ../../roles/
+...

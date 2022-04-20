@@ -1,0 +1,12 @@
+---
+- name: Project 02 - Update Operational System | Reboot Target
+  shell: "sleep 5 && reboot"
+  async: 1          # Maximum time to "hold" on task
+  poll: 0           # Time to test if the task completed within the interval defined in "async"
+
+- name: Project 02 - Update Operational System | Wait Reboot
+  wait_for_connection:
+    sleep: 5        # Waiting time to start checking
+    delay: 30       # Time to wait between scans
+    timeout: 120    # Maximum waiting time
+...

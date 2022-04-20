@@ -15,11 +15,18 @@ cd ~/git
 
 - Clone this project:
 ```bash
-git clone git@github.com:eduhermann/ansible.git
-
+git clone https://github.com/eduhermann/ansible.git
 ```
 
-- IMPORTANT: always update your inventory file according to your environment.
+- IMPORTANT: always update your inventory file according to your environment:
+```bash
+Hosts: ./resources/inventory/main.yml
+
+Credentials: Each project has individuals credentials based on SSH key logon, or you can declare user/password, example on playbook file:
+            vars:
+                ansible_ssh_user: sysadmin # You need to change to your Linux username
+                ansible_ssh_pass: sysadmin # You need to change to your Linux password
+```
 
 - To run some playbook, you need to enter the directory, and then run the Ansible playbook using below command:
 ```bash
