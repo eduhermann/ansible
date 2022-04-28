@@ -1,0 +1,9 @@
+---
+domainPrefix: 'mydomain'
+domainExtended: 'dc=mydomain,dc=local'
+domainComplete: 'mydomain.local'
+
+ldap_packages:
+  - slapd
+  - ldap-utils
+...

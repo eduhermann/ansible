@@ -1,0 +1,102 @@
+---
+- name: Project 04 - Install LDAP | Install packages
+  apt:
+    name: "{{ ldap_packages }}"
+    state: latest
+
+- name: Project 04 - Install LDAP | Stop LDAP service
+  systemd:
+    name: slapd
+    state: stopped
+
+- name: Project 04 - Install LDAP | Remove current DB
+  shell: rm -rf /var/lib/ldap/*
+
+- name: Project 04 - Install LDAP | Remove current confs
+  shell: rm -rf /etc/ldap/slapd.d/
+
+### Conf password
+- name: Project 04 - Install LDAP | Generate conf password
+  shell: echo -n {{ ldapPassword }} > /tmp/ldap-config-password
+
+- name: Project 04 - Install LDAP | Generate conf password
+  shell: slappasswd -T /tmp/ldap-config-password
+  register: ldap_conf_password
+
+- name: Project 04 - Install LDAP | Copy LDAP conf
+  template:
+    src: slapd.conf.j2
+    dest: /etc/ldap/slapd.conf
+    group: root
+    mode: 0755
+
+- name: Project 04 - Install LDAP | Replace LDAP BASE64 password on conf
+  replace:
+    path: /etc/ldap/slapd.conf
+    regexp: 'LDAP-CONF-HERE'
+    replace: '{{ ldap_conf_password.stdout }}'
+    backup: yes
+
+### Backup password
+- name: Project 04 - Install LDAP | Generate backup password
+  shell: echo -n {{ ldapPassword }} | base64 > /tmp/ldap-backup-password
+
+- name: Project 04 - Install LDAP | Register backup password
+  slurp:
+    src: /tmp/ldap-backup-password
+  register: ldap_backup_password
+
+- name: Project 04 - Install LDAP | Copy LDAP backup
+  template:
+    src: ldap.bkp.j2
+    dest: /tmp/ldap.bkp
+    group: root
+    mode: 0755
+
+- name: Project 04 - Install LDAP | Replace backup password
+  replace:
+    path: /tmp/ldap.bkp
+    regexp: 'LDAP-BACKUP-HERE'
+    replace: '{{ ldap_backup_password.content }}'
+
+###
+
+- name: Project 04 - Install LDAP | Restore LDAP backup
+  shell: slapadd < /tmp/ldap.bkp
+
+- name: Project 04 - Install LDAP | Permissions adjusts
+  file:
+    path: /var/lib/ldap/
+    owner: openldap
+    group: openldap
+    state: directory
+    mode: 0755
+    recurse: yes
+
+- name: Project 04 - Install LDAP | Copy LDAP conf
+  template:
+    src: ldap.conf.j2
+    dest: /etc/ldap/ldap.conf
+    group: root
+    mode: 0644
+
+- name: Project 04 - Install LDAP | Start and Enable LDAP service
+  systemd:
+    name: slapd
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+
+- name: Project 04 - Install LDAP | Remove LDAP password file SHA
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - '/tmp/ldap.bkp'
+    - '/tmp/ldap-backup-password'
+    - '/tmp/ldap-config-password'
+
+- name: Project 04 - Install LDAP | Show the LDAP admin password
+  debug:
+    msg: 'Your admin password is {{ ldapPassword }}'
+...

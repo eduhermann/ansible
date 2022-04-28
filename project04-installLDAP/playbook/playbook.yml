@@ -1,0 +1,13 @@
+---
+- name: Project 04 - Install LDAP
+  hosts: ldap-srv
+  vars:
+    ansible_ssh_user: root
+  vars_prompt:
+    - name: ldapPassword
+      prompt: Define the password to admin user LDAP
+      confirm: true
+  any_errors_fatal: false
+  roles:
+    - ../../roles/
+...

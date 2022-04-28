@@ -1,0 +1,15 @@
+dn: {{ domainExtended }}
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+o: {{ domainComplete }} 
+dc: {{ domainPrefix }}
+structuralObjectClass: organization
+
+dn: cn=admin,{{ domainExtended }}
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: admin
+description: LDAP administrator
+userPassword:: LDAP-BACKUP-HERE
+structuralObjectClass: organizationalRole

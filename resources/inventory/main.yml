@@ -7,6 +7,9 @@ all:
         node1:
         node2:
         node3:
+    ldap:
+      hosts:
+        ldap-srv:
 
 ### Example. Available on https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html
 #all:
