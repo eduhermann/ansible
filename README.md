@@ -30,7 +30,7 @@ Credentials: Each project has individuals credentials based on SSH key logon, or
 
 - To run some playbook, you need to enter the directory, and then run the Ansible playbook using below command:
 ```bash
-cd ~/git/ansible/project01-sshKey
+cd ~/git/ansible/
 
 ansible-playbook project01-sshKey/playbook/playbook.yml
 ```
@@ -42,3 +42,4 @@ Now, you can test all of projects contained here.
 - [x] Project 01 - Import SSH Pub key (Ubuntu/Debian, RedHat)
 - [x] Project 02 - Update operating system (Ubuntu/Debian, RedHat)
 - [x] Project 03 - Customize O.S. and install pkts (Ubuntu/Debian, RedHat)
+- [x] Project 04 - Install and configure LDAP service (only Ubuntu/Debian)
